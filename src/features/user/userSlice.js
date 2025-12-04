@@ -9,6 +9,7 @@ import {
 const initialState = {
     isLoading: false,
     user: getUserFromLocalStorage(),
+    isSidebarOpen: false,
 };
 
 // login API Thunk:
@@ -42,6 +43,11 @@ export const registerUser = createAsyncThunk(
 const userSlice = createSlice({
     name: "user",
     initialState,
+    reducers: {
+        toggleSidebar: (state) => {
+            state.isSidebarOpen = !state.isSidebarOpen;
+        },
+    },
     extraReducers: (builder) => {
         // register cases:
         builder
@@ -80,4 +86,5 @@ const userSlice = createSlice({
             });
     },
 });
+export const { toggleSidebar } = userSlice.actions;
 export default userSlice.reducer;
