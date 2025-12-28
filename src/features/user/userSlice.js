@@ -18,7 +18,7 @@ export const loginUser = createAsyncThunk(
     "/user/loginUser",
     async (user, thunkAPI) => {
         try {
-            const response = await fetchClient.post("auth/login    ", user);
+            const response = await fetchClient.post("auth/login", user);
             return response?.data;
         } catch (error) {
             console.error(error);
