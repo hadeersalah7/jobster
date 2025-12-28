@@ -18,11 +18,11 @@ const SmallSidebar = () => {
                 className={
                     isSidebarOpen
                         ? "sidebar-container show-sidebar"
-                        : "sidebar - container"
+                        : "sidebar-container"
                 }
             >
                 <div className="content">
-                    <button onClick={toggle}>
+                    <button className="close-btn" onClick={toggle}>
                         <FaTimes />
                     </button>
                     <header>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.REACT_BASE_URL
+const baseURL = "https://redux-toolkit-jobster-api-server.onrender.com/api/v1/"
 
 const fetchClient = axios.create({
     baseURL
