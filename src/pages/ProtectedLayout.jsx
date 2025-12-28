@@ -4,7 +4,7 @@ const ProtectedLayout = ({ children }) => {
     const { user } = useSelector((state) => state.user);
 
     if (!user) return <Navigate to="/landing" />;
-    return { children };
+    return( <div>{ children }</div>)
 };
 
 export default ProtectedLayout;
