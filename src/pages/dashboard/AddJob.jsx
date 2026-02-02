@@ -2,7 +2,12 @@ import { FormRow, FormRowSelect } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { clearValues, handleChange } from "../../features/job/jobSlice";
+import {
+  clearValues,
+  createJob,
+  handleChange,
+} from "../../features/job/jobSlice";
+import { useEffect } from "react";
 const AddJob = () => {
   const {
     isLoading,
@@ -16,20 +21,27 @@ const AddJob = () => {
     isEditing,
     editJobId,
   } = useSelector((store) => store.job);
-
+  const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isEditing) {
+      dispatch(handleChange({ name: "jobLocation", value: user.location }));
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!position || !company || !jobLocation) {
       return toast.error("Please Provide All Fields!");
     }
+    dispatch(createJob({ position, company, jobLocation, jobType, status }));
   };
 
   const handleJobInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    dispatch(handleChange({name, value}));
+    dispatch(handleChange({ name, value }));
   };
   return (
     <Wrapper>
@@ -93,7 +105,7 @@ const AddJob = () => {
               onClick={handleSubmit}
               disabled={isLoading}
             >
-              submit
+              {isLoading ? "isLoading..." : "submit"}
             </button>
           </div>
         </div>

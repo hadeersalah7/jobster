@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
+import fetchClient from "./../../utils/axios";
 
 const initialState = {
   isLoading: false,
@@ -16,6 +16,20 @@ const initialState = {
   editJobId: "",
 };
 
+export const createJob = createAsyncThunk("job/createJob", async (job, thunkAPI) => {
+  try {
+    const response = await fetchClient.post("/job", job, {
+      headers: {
+        authorization: `Bearer ${thunkAPI.getState().user.user.user.token}`,
+      },
+    });
+    thunkAPI.dispatch(clearValues());
+    return response.data;
+  } catch (error) {
+    thunkAPI.rejectWithValue(error.response.data.msg);
+  }
+});
+
 const jobSlice = createSlice({
   name: "job",
   initialState,
@@ -23,7 +37,25 @@ const jobSlice = createSlice({
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
-    clearValues: () => initialState
+    clearValues: () => {
+      return {
+        ...initialState,
+        jobLocation: getUserFromLocalStorage()?.location || ''
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createJob.fulfilled, (state) => {
+        state.isLoading = false;
+        toast.success("Job Created!")
+      }).addCase(createJob.rejected, (state, {payload}) => {
+        state.isLoading = false;
+        if (payload) return toast.error(payload)
+      });
   },
 });
 
